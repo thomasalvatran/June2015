@@ -1,4 +1,5 @@
 // Mark_R
+//#define EXTERN
 #include "chartree.h"
 #include <iostream>
 #include <stdio.h>
