@@ -1,3 +1,11 @@
+
+//#ifndef EXTERN
+//#define EXTERN extern
+//#endif
+
+//EXTERN int count;
+//EXTERN int arr[20];
+
 #ifndef CHARTREE_H
 #define CHARTREE_H
 
