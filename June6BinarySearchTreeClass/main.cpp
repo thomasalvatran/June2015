@@ -1,13 +1,21 @@
 // Mark_R
-//#define EXTERN
+//#define ARRAY_H     // exclusive in chartree.h and extern here
+// extern int count;  //put in chartree.h for all modules
+// extern int arr[20];
+
+//#define EXTERN      //Method 2 for arr and count using EXTERN
+//#define CHARTREE_H  //exclusive in all in chartree.h
 #include "chartree.h"
 #include <iostream>
 #include <stdio.h>
 using namespace std;
 CharTree tree;
-extern int count;
-extern int arr[];
 
+// struct NewNode{
+//    int data;
+//    NewNode *left;
+//    NewNode *right;
+//};
 void createTree() {
   tree.BuildRoot('r'); // not a binary search tree charTree
   AppendLeft(tree.Root(), 'h');
@@ -54,8 +62,8 @@ void printTree() {
   cout << '\n';
 }
 
-char *str1 = "Is BST";
-char *str2 = "Not a BST";
+const char *str1 = "Is BST"; //deprecated conversion from string conts to char*
+char const *str2 = "Not a BST";
 string str = "Is BST\n"; // cannot convert const char* to string* in printf
 
 int main() {
@@ -86,10 +94,20 @@ int main() {
   //     printf("Is BST\n");
   //   else
   //     printf("Not a BST\n");
-  printf("delete f\n");
-  TreeNode *root =  deleteNode(tree.Root(), 'f');
-//  tree.Root() = root; //lvalue required as left operand of assignment
+  printf("delete char f...\n");
+  TreeNode *root = deleteNode(tree.Root(), 'f');
+  //  tree.Root() = root; //lvalue required as left operand of assignment
   inorderPrint(root);
+  printf("\n");
+  printNodes(tree.Root());
+  printf("\n");
+  printf("insertNode newroot...\n");
+  TreeNode *curr, *newroot = NULL;
+  for (int i = 0; i < 6; i++) {
+      curr = new TreeNode('A'+ i, NULL, NULL);
+      insertNode(&newroot, curr);
+    }
+      printNodes(newroot);
   printf("\n");
   return 0;
 }
@@ -124,6 +142,9 @@ int main() {
 //Method3: Is BST
 //Array of tree in-order traversal: CHORadef
 //inorderPrint(): CHORadef
-//delete f
+//delete char f...
 //CHORade
+//CHORade
+//insertNode newroot...
+//ABCDEF
 //Dtor

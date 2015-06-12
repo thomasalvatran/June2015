@@ -1,18 +1,24 @@
 #include "chartree.h"
 //#include <iomanip> setw
 using namespace std;
-int count = 0;
+int count = 0;      //easy here and extern for all modules
 int arr[20];
 
 // class TreeNode { //classes default to private access modifiers and in structs
 // default is public
 // public:
-struct TreeNode {
-  int data;
-  NodePtr lLink;
-  NodePtr rLink;
-  TreeNode(char, NodePtr, NodePtr); // ctor
-};
+//struct NewNode{
+//    int data;
+//    NewNode *left;
+//    NewNode *right;
+//};
+
+//struct TreeNode {  //move chartree.h
+//  int data;
+//  NodePtr lLink;
+//  NodePtr rLink;
+//  TreeNode(char, NodePtr, NodePtr); // ctor
+//};
 
 TreeNode::TreeNode(char someChar, NodePtr leftPtr,
                    NodePtr rightPtr) { // TreeNode Class/struct
@@ -162,50 +168,72 @@ bool isBinarySearchTree(TreeNode *root) {
   else
     return false;
 }
-NodePtr findMinNode(TreeNode *root){
-    while (root->lLink != NULL)
-        root = root->lLink;
-    return root;
+NodePtr findMinNode(TreeNode *root) {
+  while (root->lLink != NULL)
+    root = root->lLink;
+  return root;
 }
 
 NodePtr deleteNode(TreeNode *root, int data) {
-  if(root == NULL)
-      return root;
-  else if (data < root->data)
-      root->lLink = deleteNode(root->lLink, data);
-  else if (data > root->data)
-      root->rLink = deleteNode(root->rLink, data);
-  else{
-      //case 1: No child
-      if(root->lLink == NULL && root->rLink == NULL){
-          delete root;
-          root = NULL;
-      }
-      //case 2: One child
-      else if (root->lLink == NULL){
-          TreeNode *temp = root;
-          root = root->rLink;
-          delete temp;
-      }
-      else if (root->rLink == NULL){
-          TreeNode *temp = root;
-          root = root->lLink;
-          delete temp;
-      }
-      //case 3: 2 children
-      else {
-          TreeNode *temp = findMinNode(root->rLink);
-          root->data = temp->data;
-          root->rLink = deleteNode(root->rLink, temp->data);
-      }
-  }
+  if (root == NULL)
     return root;
+  else if (data < root->data)
+    root->lLink = deleteNode(root->lLink, data);
+  else if (data > root->data)
+    root->rLink = deleteNode(root->rLink, data);
+  else {
+    // case 1: No child
+    if (root->lLink == NULL && root->rLink == NULL) {
+      delete root;
+      root = NULL;
+    }
+    // case 2: One child
+    else if (root->lLink == NULL) {
+      TreeNode *temp = root;
+      root = root->rLink;
+      delete temp;
+    } else if (root->rLink == NULL) {
+      TreeNode *temp = root;
+      root = root->lLink;
+      delete temp;
+    }
+    // case 3: 2 children
+    else {
+      TreeNode *temp = findMinNode(root->rLink);
+      root->data = temp->data;
+      root->rLink = deleteNode(root->rLink, temp->data);
+    }
+  }
+  return root;
 }
 
-void inorderPrint(TreeNode *root){
-    if (root == NULL)
-        return;
-    inorderPrint(root->lLink);
-    cout << (char)root->data;
-    inorderPrint(root->rLink);
+void inorderPrint(TreeNode *root) {
+  if (root == NULL)
+    return;
+  inorderPrint(root->lLink);
+  cout << (char)root->data;
+  inorderPrint(root->rLink);
+}
+
+void printNodes(TreeNode *root) {
+  if (root->lLink)
+    printNodes(root->lLink);
+  cout << (char)root->data;
+  if (root->rLink)
+    printNodes(root->rLink);
+//  TreeNode *cur = new TreeNode('c', NULL, NULL);
+//  cur->lLink = NULL;
+}
+
+void insertNode(TreeNode **root, TreeNode *newnode) {
+//    cout <<"insertNode" << endl;
+
+  if (!(*root)) {
+    *root = newnode;
+    return;
+  }
+  if (newnode->data < (*root)->data)
+      insertNode(&(*root)->lLink, newnode);
+  else
+      insertNode(&(*root)->rLink, newnode);
 }
