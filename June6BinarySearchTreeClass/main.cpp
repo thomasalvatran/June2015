@@ -62,7 +62,7 @@ void printTree() {
   cout << '\n';
 }
 
-const char *str1 = "Is BST"; //deprecated conversion from string conts to char*
+const char *str1 = "Is BST"; // deprecated conversion from string conts to char*
 char const *str2 = "Not a BST";
 string str = "Is BST\n"; // cannot convert const char* to string* in printf
 
@@ -104,11 +104,21 @@ int main() {
   printf("insertNode newroot...\n");
   TreeNode *curr, *newroot = NULL;
   for (int i = 0; i < 6; i++) {
-      curr = new TreeNode('A'+ i, NULL, NULL);
-      insertNode(&newroot, curr);
-    }
-      printNodes(newroot);
+    curr = new TreeNode('a' + i, NULL, NULL); // heap
+    //    curr->data = 'a'; curr->lLink = curr->rLink = NULL // in stack go
+    //    nowhere
+    insertNode(&newroot, curr);
+  }
+  printNodes(newroot);
   printf("\n");
+
+  printf("insert char A\n"); // insert left A < a
+  curr = new TreeNode('A', NULL, NULL);
+  insertNode(&newroot, curr);
+
+  printNodes(newroot);
+  printf("\n");
+  printf("newroot is %c\n", newroot->data);
   return 0;
 }
 //left-right: root1->data = 97
@@ -146,5 +156,8 @@ int main() {
 //CHORade
 //CHORade
 //insertNode newroot...
-//ABCDEF
+//abcdef
+//insert char A
+//Aabcdef
+//newroot is a
 //Dtor
