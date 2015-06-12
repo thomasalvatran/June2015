@@ -1,91 +1,176 @@
 #include <iostream>
-#include <utility>
-#include <algorithm>
-#include <list>
+#include <string>
+using namespace std;
 
-namespace tree {
+class TreeNode {
+public:
+  void insert_node(TreeNode *new_node);
+  void print_nodes() const;
+  bool find(string value) const;
 
-template<typename T>
-struct node
-{
-  T data;
-  node* l;
-  node* r;
-  node(T&& data_ = T()) : data(std::move(data_)), l(0), r(0) {}
+private:
+  string data;
+  TreeNode *left;
+  TreeNode *right;
+  friend class BinarySearchTree;
 };
 
-template<typename T>
-int max_depth(node<T>* n)
-{
-  if (!n) return 0;
-  return 1 + std::max(max_depth(n->l), max_depth(n->r));
+class BinarySearchTree {
+public:
+  BinarySearchTree();
+  void insert(string data);
+  void erase(string data);
+  int count(string data) const;
+  void print() const;
+
+private:
+  TreeNode *root;
+};
+
+BinarySearchTree::BinarySearchTree() { root = NULL; }
+
+void BinarySearchTree::print() const {
+  if (root != NULL)
+    root->print_nodes();
 }
 
-template<typename T>
-void prt(node<T>* n)
-{
-  struct node_depth
-  {
-    node<T>* n;
-    int lvl;
-    node_depth(node<T>* n_, int lvl_) : n(n_), lvl(lvl_) {}
-  };
+void BinarySearchTree::insert(string data) {
+  TreeNode *new_node = new TreeNode;
+  new_node->data = data;
+  new_node->left = NULL;
+  new_node->right = NULL;
+  if (root == NULL)
+    root = new_node;
+  else
+    root->insert_node(new_node);
+}
 
-  int depth = max_depth(n);
-
-  char buf[1024];
-  int last_lvl = 0;
-  int offset = (1 << depth) - 1;
-
-  // using a queue means we perform a breadth first iteration through the tree
-  std::list<node_depth> q;
-
-  q.push_back(node_depth(n, last_lvl));
-  while (q.size())
-  {
-    const node_depth& nd = *q.begin();
-
-    // moving to a new level in the tree, output a new line and calculate new offset
-    if (last_lvl != nd.lvl)
-    {
-      std::cout << "\n";
-
-      last_lvl = nd.lvl;
-      offset = (1 << (depth - nd.lvl)) - 1;
-    }
-
-    // output <offset><data><offset>
-    if (nd.n)
-      sprintf(buf, " %*s%d%*s", offset, " ", nd.n->data, offset, " ");
+void TreeNode::insert_node(TreeNode *new_node) {
+  if (new_node->data < data) {
+    if (left == NULL)
+      left = new_node;
     else
-      sprintf(buf, " %*s", offset << 1, " ");
-    std::cout << buf;
-
-    if (nd.n)
-    {
-      q.push_back(node_depth(nd.n->l, last_lvl + 1));
-      q.push_back(node_depth(nd.n->r, last_lvl + 1));
-    }
-
-    q.pop_front();
+      left->insert_node(new_node);
+  } else if (data < new_node->data) {
+    if (right == NULL)
+      right = new_node;
+    else
+      right->insert_node(new_node);
   }
-  std::cout << "\n";
 }
 
+int BinarySearchTree::count(string data) const {
+  if (root == NULL)
+    return 0;
+  else if (root->find(data))
+    return 1;
+  else
+    return 0;
 }
 
-int main()
-{
-  typedef tree::node<int> node;
-  node* head = new node();
-  head->l    = new node(1);
-  head->r    = new node(2);
-  head->l->l = new node(3);
-  head->l->r = new node(4);
-  head->r->l = new node(5);
-  head->r->r = new node(6);
+void BinarySearchTree::erase(string data) {
+  // Find node to be removed
 
-  tree::prt(head);
+  TreeNode *to_be_removed = root;
+  TreeNode *parent = NULL;
+  bool found = false;
+  while (!found && to_be_removed != NULL) {
+    if (to_be_removed->data < data) {
+      parent = to_be_removed;
+      to_be_removed = to_be_removed->right;
+    } else if (data < to_be_removed->data) {
+      parent = to_be_removed;
+      to_be_removed = to_be_removed->left;
+    } else
+      found = true;
+  }
 
+  if (!found)
+    return;
+
+  // to_be_removed contains data
+
+  // If one of the children is empty, use the other
+
+  if (to_be_removed->left == NULL || to_be_removed->right == NULL) {
+    TreeNode *new_child;
+    if (to_be_removed->left == NULL)
+      new_child = to_be_removed->right;
+    else
+      new_child = to_be_removed->left;
+    if (parent == NULL) // Found in root
+      root = new_child;
+    else if (parent->left == to_be_removed)
+      parent->left = new_child;
+    else
+      parent->right = new_child;
+    return;
+  }
+
+  // Neither subtree is empty
+
+  // Find smallest element of the right subtree
+
+  TreeNode *smallest_parent = to_be_removed;
+  TreeNode *smallest = to_be_removed->right;
+  while (smallest->left != NULL) {
+    smallest_parent = smallest;
+    smallest = smallest->left;
+  }
+
+  // smallest contains smallest child in right subtree
+
+  // Move contents, unlink child
+  to_be_removed->data = smallest->data;
+  if (smallest_parent == to_be_removed)
+    smallest_parent->right = smallest->right;
+  else
+    smallest_parent->left = smallest->right;
+}
+
+bool TreeNode::find(string value) const {
+  if (value < data) {
+    if (left == NULL)
+      return false;
+    else
+      return left->find(value);
+  } else if (data < value) {
+    if (right == NULL)
+      return false;
+    else
+      return right->find(value);
+  } else
+    return true;
+}
+
+void TreeNode::print_nodes() const {
+  if (left != NULL)
+    left->print_nodes();
+  cout << data << "\n";
+  if (right != NULL)
+    right->print_nodes();
+}
+int main() {
+  BinarySearchTree t;
+  t.insert("D");
+  t.insert("B");
+  t.insert("A");
+  t.insert("C");
+  t.insert("F");
+  t.insert("E");
+  t.insert("I");
+  t.insert("G");
+  t.insert("H");
+  t.insert("J");
+  t.print();
+  cout << "-------" << endl;
+  t.erase("A"); // Removing leaf
+  t.erase("B"); // Removing element with one child
+  t.erase("F"); // Removing element with two children
+  t.erase("D"); // Removing root
+  t.print();
+  cout << "-------" << endl;
+  cout << t.count("E") << "\n";
+  cout << t.count("F") << "\n";
   return 0;
 }
