@@ -57,7 +57,8 @@ bool isBST1(TreeNode *root); // Method 2: in-order traverse
 NodePtr deleteNode(TreeNode *root, int data);
 void inorderPrint(TreeNode *root);
 void printNodes(TreeNode *root);
-void insertNode(TreeNode **root, TreeNode *newnode);
+void insertNodeatBegin(TreeNode **root, TreeNode *newnode);
+void insertNodeatEnd(TreeNode **root, TreeNode *newnode);
 bool isSubtreeLesser(NodePtr root, int value);
 bool isSubtreeGreater(NodePtr root, int value);
 

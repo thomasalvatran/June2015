@@ -1,19 +1,19 @@
 #include "chartree.h"
 //#include <iomanip> setw
 using namespace std;
-int count = 0;      //easy here and extern for all modules
+int count = 0;
 int arr[20];
 
 // class TreeNode { //classes default to private access modifiers and in structs
 // default is public
 // public:
-//struct NewNode{
+// struct NewNode{
 //    int data;
 //    NewNode *left;
 //    NewNode *right;
 //};
 
-//struct TreeNode {  //move chartree.h
+// struct TreeNode {
 //  int data;
 //  NodePtr lLink;
 //  NodePtr rLink;
@@ -168,9 +168,26 @@ bool isBinarySearchTree(TreeNode *root) {
   else
     return false;
 }
-NodePtr findMinNode(TreeNode *root) {
-  while (root->lLink != NULL)
-    root = root->lLink;
+// NodePtr findMinNodeLeft(TreeNode *root) {
+//  while (root->lLink != NULL)
+//    root = root->lLink;
+//  return root;
+//}
+
+// NodePtr findMinNodeRight(TreeNode *root) {
+//  while (root->rLink != NULL)
+//    root = root->rLink;
+//  return root;
+//}
+
+NodePtr findMinNodeLeftOrRight(TreeNode *root, int LorR) {
+  if (!LorR) { /* 0 is left */
+    while (root->lLink != NULL)
+      root = root->lLink;
+  } else {
+    while (root->rLink != NULL)
+      root = root->rLink;
+  }
   return root;
 }
 
@@ -199,7 +216,7 @@ NodePtr deleteNode(TreeNode *root, int data) {
     }
     // case 3: 2 children
     else {
-      TreeNode *temp = findMinNode(root->rLink);
+      TreeNode *temp = findMinNodeLeftOrRight(root->rLink, 1);
       root->data = temp->data;
       root->rLink = deleteNode(root->rLink, temp->data);
     }
@@ -221,19 +238,40 @@ void printNodes(TreeNode *root) {
   cout << (char)root->data;
   if (root->rLink)
     printNodes(root->rLink);
-//  TreeNode *cur = new TreeNode('c', NULL, NULL);
-//  cur->lLink = NULL;
+  //  TreeNode *cur = new TreeNode('c', NULL, NULL);
+  //  cur->lLink = NULL;
 }
 
-void insertNode(TreeNode **root, TreeNode *newnode) {
-//    cout <<"insertNode" << endl;
+void insertNodeatBegin(TreeNode **root, TreeNode *newnode) {
+  //    cout <<"insertNode" << endl;
 
   if (!(*root)) {
     *root = newnode;
     return;
   }
   if (newnode->data < (*root)->data)
-      insertNode(&(*root)->lLink, newnode);
+    insertNodeatBegin(&(*root)->lLink, newnode);
   else
-      insertNode(&(*root)->rLink, newnode);
+    insertNodeatBegin(&(*root)->rLink, newnode);
+}
+
+void insertNodeatEnd(TreeNode **root, TreeNode *newnode) {
+  TreeNode *temp;
+
+  //    cout <<"insertNode" << endl;
+  if (!(*root)) {
+    *root = newnode;
+    return;
+  }
+  if (newnode->data < (*root)->data) {
+    //      insertNodeEnd(&(*root)->lLink, newnode);
+    //    temp = findMinNodeLeft(*root);
+    temp = findMinNodeLeftOrRight(*root, 0);
+    insertNodeatEnd(&(*temp).lLink, newnode); // either ways . or ->
+  } else {
+    //      insertNodeatEnd(&(*root)->rLink, newnode);
+    //    temp = findMinNodeRight(*root);
+    temp = findMinNodeLeftOrRight(*root, 1);
+    insertNodeatEnd(&(temp)->rLink, newnode);
+  }
 }

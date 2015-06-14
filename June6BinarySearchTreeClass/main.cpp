@@ -8,6 +8,7 @@
 #include "chartree.h"
 #include <iostream>
 #include <stdio.h>
+
 using namespace std;
 CharTree tree;
 
@@ -107,14 +108,18 @@ int main() {
     curr = new TreeNode('a' + i, NULL, NULL); // heap
     //    curr->data = 'a'; curr->lLink = curr->rLink = NULL // in stack go
     //    nowhere
-    insertNode(&newroot, curr);
+    insertNodeatBegin(&newroot, curr);
   }
   printNodes(newroot);
   printf("\n");
 
-  printf("insert char A\n"); // insert left A < a
+  printf("insert char at begin char A\n"); // insert left A < a
   curr = new TreeNode('A', NULL, NULL);
-  insertNode(&newroot, curr);
+  insertNodeatBegin(&newroot, curr);
+
+  printf("insert char at end char w\n"); // insert left A < a
+  curr = new TreeNode('w', NULL, NULL);
+  insertNodeatEnd(&newroot, curr);
 
   printNodes(newroot);
   printf("\n");
