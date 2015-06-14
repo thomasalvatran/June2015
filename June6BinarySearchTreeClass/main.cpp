@@ -162,7 +162,8 @@ int main() {
 //CHORade
 //insertNode newroot...
 //abcdef
-//insert char A
-//Aabcdef
+//insert char at begin char A
+//insert char at end char w
+//Aabcdefw
 //newroot is a
 //Dtor
