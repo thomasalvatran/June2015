@@ -39,7 +39,7 @@ CharTree::~CharTree() {
 void DeleteAll(NodePtr ptr) {
   if (ptr != NULL) {
     DeleteAll(LChild(ptr));
-    DeleteAll(LChild(ptr));
+    DeleteAll(RChild(ptr));
     delete ptr;
   }
 }
