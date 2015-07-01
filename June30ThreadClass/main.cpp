@@ -21,7 +21,6 @@ void* communicatingThread::run() {
     return 0;
 }
 
-
 using namespace std;
 
 int main() {
@@ -34,5 +33,8 @@ int main() {
     thread2->join();
 
     cout << "s = " << s << endl;
+    TestClass x;
+    x.print();
+
     return 0;
 }

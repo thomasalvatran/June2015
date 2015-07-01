@@ -45,5 +45,10 @@ private:
     static void* startThread(void* pVoid);
     void printError(char * msg, int status, char* fileName, int lineNumber);
 };
+class TestClass {
+    int a;
+  public:
+    void print();
+};
 
 #endif // THREAD_H
